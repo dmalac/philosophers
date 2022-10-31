@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/31 12:58:04 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/10/26 17:14:01 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/10/31 11:44:35 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,9 +45,10 @@ int	main(int argc, char **argv)
 	if (!philos || !param.forks)
 		error_and_exit(MALLOC_ERROR, philo_data, philos, NULL);
 	create_mutex(philo_data, philos, &param);
+	//lock philo_data_mutex;
 	create_threads(philo_data, philos, &param, &surveillance);
-	cleanup_threads_mutex(&param, &surveillance.brother);
-	// cleanup_threads_mutex(philos, &param, &surveillance.brother);
+	// cleanup_threads_mutex(&param, &surveillance.brother);
+	cleanup_threads_mutex(philos, &param, &surveillance.brother);
 	free(philos);
 	free(philo_data);
 	free(param.forks);

@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 17:14:33 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/10/26 17:50:33 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/10/31 14:00:14 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ t_param *param)
 	if (param->who_dead < 0 || status == DIED)
 	{
 		pthread_mutex_lock(&param->printer);
+		// replace by ft_putstr & ft_putendl?
 		printf("%lld %zu %s\n", timestamp, philo_id, message[status]);
 		pthread_mutex_unlock(&param->printer);
 	}

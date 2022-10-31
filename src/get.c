@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 14:40:13 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/10/26 18:27:27 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/10/31 12:36:06 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,4 +24,18 @@ long long int	get_timestamp(void)
 	else
 		timestamp = time.tv_sec * 1000 + time.tv_usec / 1000;
 	return (timestamp);
+}
+
+void	get_some_sleep(unsigned int to_sleep, t_param *param)
+{
+	unsigned int	moment;
+
+	moment = 100000;
+	while (to_sleep >= moment && param->who_dead < 0)
+	{
+		usleep(moment);
+		to_sleep -= moment;
+	}
+	if (to_sleep > 0 && param->who_dead < 0)
+		usleep(to_sleep);
 }

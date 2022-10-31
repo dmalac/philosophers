@@ -6,12 +6,12 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 10:02:56 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/10/26 18:26:40 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/10/31 13:56:23 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
-#include <unistd.h>	// del (is for usleep)
+// #include <unistd.h>	// del (is for usleep)
 #include <stdio.h>	// delete
 
 void	*monitoring(void *surveillance)
@@ -20,6 +20,7 @@ void	*monitoring(void *surveillance)
 	t_big_brother	*info;
 	long long int	now;
 	int				min_time_left;
+	// array last_eaten & how_many_times_eaten, mutex each index separately
 
 	info = (t_big_brother *)surveillance;
 	while (info->philo_data->param->who_dead < 0 && \
@@ -45,7 +46,7 @@ void	*monitoring(void *surveillance)
 			i++;
 		}
 		if (min_time_left > 10)		// to be improved
-			usleep((min_time_left - 5) * 1000);
+			get_some_sleep((min_time_left - 5) * 1000, info->philo_data->param);
 	}
 	*info->who_dead = 1;
 	return (NULL);

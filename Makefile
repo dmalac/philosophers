@@ -22,8 +22,8 @@ CC = gcc
 CCFLAGS = -I $(INCLDIR) -Wall -Wextra -Werror -pthread
 
 # delete
-DEBUG_FLAGS = -g -fsanitize=thread
-# DEBUG_FLAGS = -g -fsanitize=address
+# DEBUG_FLAGS = -g -fsanitize=thread
+DEBUG_FLAGS = -g -fsanitize=address
 DEBUG ?= 0
 
 UNITY_DIR = unity_tester

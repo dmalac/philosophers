@@ -41,6 +41,8 @@ static void	st_process_input(t_param *param, char **argv)
 	param->die_time = ft_atoi(argv[2]);
 	param->eat_time = ft_atoi(argv[3]);
 	param->sleep_time = ft_atoi(argv[4]);
+	if (param->total_philos % 2 == 1)
+		param->think_time = 2 * param->eat_time - param->sleep_time;
 	if (argv[5])
 		param->meals = ft_atoi(argv[5]);
 	else

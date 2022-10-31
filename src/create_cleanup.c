@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 09:46:18 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/10/26 17:53:55 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/10/31 11:34:57 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,22 +46,22 @@ t_param *param, t_big_brother *surveillance)
 		if (pthread_create(&philos[i], NULL, eat_sleep_think, \
 		&philo_data[i]) < 0)
 			error_and_exit(THREAD_ERROR, philo_data, philos, param->forks);
-		pthread_detach(philos[i]);
+		// pthread_detach(philos[i]);
 		i++;
 	}
 }
 
-// void	cleanup_threads_mutex(pthread_t *philos, t_param *param, \
-// pthread_t *brother)
-void	cleanup_threads_mutex(t_param *param, \
+void	cleanup_threads_mutex(pthread_t *philos, t_param *param, \
 pthread_t *brother)
+// void	cleanup_threads_mutex(t_param *param, \
+// pthread_t *brother)
 {
 	size_t	i;
 
 	i = 0;
 	while (i < param->total_philos)
 	{
-		// pthread_join(philos[i], NULL);
+		pthread_join(philos[i], NULL);
 		pthread_mutex_destroy(&param->forks[i]);
 		i++;
 	}

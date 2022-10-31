@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 09:08:43 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/10/26 18:24:08 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/10/31 11:56:20 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ static void	st_eat(t_data *data, size_t fork1, size_t fork2)
 	if (data->param->who_dead < 0)
 		print_mesage(data->last_meal - data->param->start_time, data->id + 1, \
 		EATING, data->param);
-	usleep(data->param->eat_time * 1000);
+	get_some_sleep(data->param->eat_time * 1000, ((t_data *)data)->param);
 	pthread_mutex_unlock(&data->param->forks[fork1]);
 	pthread_mutex_unlock(&data->param->forks[fork2]);
 	data->meals_eaten++;
@@ -66,11 +66,13 @@ static void	st_sleep_and_think(t_data *data)
 	if (data->param->who_dead < 0)
 		print_mesage(time - data->param->start_time, data->id + 1, SLEEPING, \
 		data->param);
-	usleep(data->param->sleep_time * 1000);
+	get_some_sleep(data->param->sleep_time * 1000, ((t_data *)data)->param);
 	time = get_timestamp();
 	if (data->param->who_dead < 0)
 		print_mesage(time - data->param->start_time, data->id + 1, THINKING, \
 		data->param);
+	if (data->param->total_philos % 2 == 1)
+		get_some_sleep(data->param->think_time * 1000, ((t_data *)data)->param);
 }
 
 void	*eat_sleep_think(void *data)
@@ -81,7 +83,11 @@ void	*eat_sleep_think(void *data)
 	st_get_fork_order(((t_data *)data)->id, \
 	((t_data *)data)->param->total_philos, &fork1, &fork2);
 	if (((t_data *)data)->id % 2 == 1)
-		usleep(((t_data *)data)->param->eat_time * 1000);
+		get_some_sleep(((t_data *)data)->param->eat_time * 1000 - 10, \
+		((t_data *)data)->param);
+	if (((t_data *)data)->id == ((t_data *)data)->param->total_philos - 1)
+		get_some_sleep(((t_data *)data)->param->eat_time * 1000 * 2 - 10, \
+		((t_data *)data)->param);
 	while (((t_data *)data)->param->who_dead < 0)
 	{
 		if (((t_data *)data)->param->who_dead < 0)
