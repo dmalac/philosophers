@@ -6,15 +6,15 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 09:08:43 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/10/31 11:56:20 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/01 19:39:02 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 #include <unistd.h>
-#include <stdio.h>	// TBD whether to replace printf by ft_printf!
+// #include <stdio.h>	// TBD whether to replace printf by ft_printf!
 
-static void	st_get_fork_order(size_t id, size_t total_philos, size_t *fork1, \
+static void	st_get_fork_order(int id, int total_philos, size_t *fork1, \
 size_t *fork2)
 {
 	if (id > 0)
@@ -28,17 +28,17 @@ static void	st_grab_fork(t_data *data, size_t fork1, size_t fork2)
 {
 	long long int	time;
 
-	pthread_mutex_lock(&data->param->forks[fork1]);
+	pthread_mutex_lock(&data->param->m_forks[fork1]);
 	time = get_timestamp();
 	if (data->param->who_dead < 0)
-		print_mesage(time - data->param->start_time, data->id + 1, FORK, \
+		print_msg(time - data->param->start_time, data->id + 1, FORK, \
 		data->param);
 	else
 		return ;
-	pthread_mutex_lock(&data->param->forks[fork2]);
+	pthread_mutex_lock(&data->param->m_forks[fork2]);
 	time = get_timestamp();
-	if (data->param->who_dead < 0)
-		print_mesage(time - data->param->start_time, data->id + 1, FORK, \
+	if (data->param->who_dead < 0)	// data race
+		print_msg(time - data->param->start_time, data->id + 1, FORK, \
 		data->param);
 	else
 		return ;
@@ -46,16 +46,18 @@ static void	st_grab_fork(t_data *data, size_t fork1, size_t fork2)
 
 static void	st_eat(t_data *data, size_t fork1, size_t fork2)
 {
-	data->last_meal = get_timestamp(); // here data race
+	pthread_mutex_lock(&data->param->m_philo[data->id]);
+	data->param->last_meal[data->id] = get_timestamp(); // here data race
+	pthread_mutex_unlock(&data->param->m_philo[data->id]);
 	if (data->param->who_dead < 0)
-		print_mesage(data->last_meal - data->param->start_time, data->id + 1, \
-		EATING, data->param);
-	get_some_sleep(data->param->eat_time * 1000, ((t_data *)data)->param);
-	pthread_mutex_unlock(&data->param->forks[fork1]);
-	pthread_mutex_unlock(&data->param->forks[fork2]);
-	data->meals_eaten++;
-	if (data->meals_eaten == data->param->meals)
-		data->param->eaten_enough++;
+		print_msg(data->param->last_meal[data->id] - data->param->start_time, \
+		data->id + 1, EATING, data->param);
+	get_some_sleep(data->param->eat_time * 1000, data->param);
+	pthread_mutex_unlock(&data->param->m_forks[fork1]);
+	pthread_mutex_unlock(&data->param->m_forks[fork2]);
+	pthread_mutex_lock(&data->param->m_philo[data->id]);
+	data->param->meals_eaten++;
+	pthread_mutex_unlock(&data->param->m_philo[data->id]);
 }
 
 static void	st_sleep_and_think(t_data *data)
@@ -64,38 +66,40 @@ static void	st_sleep_and_think(t_data *data)
 
 	time = get_timestamp();
 	if (data->param->who_dead < 0)
-		print_mesage(time - data->param->start_time, data->id + 1, SLEEPING, \
+		print_msg(time - data->param->start_time, data->id + 1, SLEEPING, \
 		data->param);
-	get_some_sleep(data->param->sleep_time * 1000, ((t_data *)data)->param);
+	get_some_sleep(data->param->sleep_time * 1000, data->param);
 	time = get_timestamp();
 	if (data->param->who_dead < 0)
-		print_mesage(time - data->param->start_time, data->id + 1, THINKING, \
+		print_msg(time - data->param->start_time, data->id + 1, THINKING, \
 		data->param);
 	if (data->param->total_philos % 2 == 1)
-		get_some_sleep(data->param->think_time * 1000, ((t_data *)data)->param);
+		get_some_sleep(data->param->think_time * 1000, data->param);
 }
 
-void	*eat_sleep_think(void *data)
+void	*eat_sleep_think(void *input)
 {
-	size_t			fork1;
-	size_t			fork2;
+	size_t	fork1;
+	size_t	fork2;
+	t_data	*data;
 
-	st_get_fork_order(((t_data *)data)->id, \
-	((t_data *)data)->param->total_philos, &fork1, &fork2);
-	if (((t_data *)data)->id % 2 == 1)
-		get_some_sleep(((t_data *)data)->param->eat_time * 1000 - 10, \
-		((t_data *)data)->param);
-	if (((t_data *)data)->id == ((t_data *)data)->param->total_philos - 1)
-		get_some_sleep(((t_data *)data)->param->eat_time * 1000 * 2 - 10, \
-		((t_data *)data)->param);
-	while (((t_data *)data)->param->who_dead < 0)
+	data = (t_data *)input;
+	pthread_mutex_lock(&data->param->m_philo[data->id]);
+	pthread_mutex_unlock(&data->param->m_philo[data->id]);
+	st_get_fork_order(data->id, data->param->total_philos, &fork1, &fork2);
+	if (data->id % 2 == 1)
+		get_some_sleep(data->param->eat_time * 1000 - 10, data->param);
+	if (data->param->total_philos % 2 == 1 && data->id == \
+	data->param->total_philos - 1)
+		get_some_sleep(data->param->eat_time * 1000 * 2 - 10, data->param);
+	while (data->param->who_dead < 0)
 	{
-		if (((t_data *)data)->param->who_dead < 0)
-			st_grab_fork(((t_data *)data), fork1, fork2);
-		if (((t_data *)data)->param->who_dead < 0)
-			st_eat(((t_data *)data), fork1, fork2);
-		if (((t_data *)data)->param->who_dead < 0)
-			st_sleep_and_think((t_data *)data);
+		if (data->param->who_dead < 0)
+			st_grab_fork(data, fork1, fork2);
+		if (data->param->who_dead < 0)
+			st_eat(data, fork1, fork2);
+		if (data->param->who_dead < 0)
+			st_sleep_and_think(data);
 	}
 	return (NULL);
 }

@@ -4,6 +4,7 @@ SRC = 	main.c \
 		ft_atoi.c \
 		ft_strlen.c \
 		ft_putendl_fd.c \
+		ft_putnbr_fd.c \
 		eat_sleep_think.c \
 		init_all.c \
 		error.c \
