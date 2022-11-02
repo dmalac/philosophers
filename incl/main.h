@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/31 14:54:21 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/01 19:09:05 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/02 19:32:45 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,10 @@
 typedef struct s_param
 {
 	int				total_philos;
-	unsigned int	die_time;
-	unsigned int	eat_time;
-	unsigned int	sleep_time;
-	unsigned int	think_time;
+	int				die_time;
+	int				eat_time;
+	int				sleep_time;
+	int				think_time;
 	int				meals;
 	long long int	*last_meal;
 	int				*meals_eaten;
@@ -42,7 +42,6 @@ typedef struct s_data
 typedef struct s_big_brother
 {
 	pthread_t	brother;
-	int			*who_dead;
 	t_param		*param;
 }				t_big_brother;
 
@@ -54,6 +53,8 @@ enum	e_bool
 
 enum	e_error
 {
+	ARGS_ERROR,
+	PHILOS_ERROR,
 	INPUT_ERROR,
 	MALLOC_ERROR,
 	THREAD_ERROR
@@ -84,12 +85,13 @@ void			create_mutex(t_data *philo_data, pthread_t *philos, \
 					t_param *param);
 void			create_threads(t_data *philo_data, pthread_t *philos, \
 					t_param *param, t_big_brother *surveillance);
-// void			cleanup_threads_mutex(t_param *param, \
-// 					pthread_t *brother);
 void			cleanup_threads_mutex(pthread_t *philos, t_param *param, \
 					pthread_t *brother);
 void			*monitoring(void *philos);
-void			get_some_sleep(unsigned int to_sleep, t_param *param);
+void			get_some_sleep(int to_sleep, t_param *param);
 void			free_all(t_data *philo_data, pthread_t *philos);
+void			get_fork_order(int id, int total_philos, size_t *fork1, \
+					size_t *fork2);
+int				live_and_kickin(t_param *param);
 
 #endif

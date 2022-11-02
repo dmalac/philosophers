@@ -9,7 +9,7 @@ SRC = 	main.c \
 		init_all.c \
 		error.c \
 		get.c \
-		print.c \
+		print_msg.c \
 		create_cleanup.c \
 		monitoring.c
 
@@ -23,8 +23,8 @@ CC = gcc
 CCFLAGS = -I $(INCLDIR) -Wall -Wextra -Werror -pthread
 
 # delete
-# DEBUG_FLAGS = -g -fsanitize=thread
-DEBUG_FLAGS = -g -fsanitize=address
+DEBUG_FLAGS = -g -fsanitize=thread
+# DEBUG_FLAGS = -g -fsanitize=address
 DEBUG ?= 0
 
 UNITY_DIR = unity_tester

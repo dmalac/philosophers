@@ -6,12 +6,11 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 09:46:18 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/01 19:11:53 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/02 19:32:52 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
-#include <stdio.h>	// delete
 
 void	create_mutex(t_data *philo_data, pthread_t *philos, \
 t_param *param)
@@ -35,8 +34,6 @@ t_param *param, t_big_brother *surveillance)
 	int	i;
 
 	i = 0;
-	// while (i < param->total_philos)
-	// 	philo_data[i++].last_meal = param->start_time;
 	if (pthread_create(&surveillance->brother, NULL, monitoring, surveillance) \
 	< 0)
 		error_and_exit(THREAD_ERROR, philo_data, philos);
@@ -46,15 +43,12 @@ t_param *param, t_big_brother *surveillance)
 		if (pthread_create(&philos[i], NULL, eat_sleep_think, \
 		&philo_data[i]) < 0)
 			error_and_exit(THREAD_ERROR, philo_data, philos);
-		// pthread_detach(philos[i]);
 		i++;
 	}
 }
 
 void	cleanup_threads_mutex(pthread_t *philos, t_param *param, \
 pthread_t *brother)
-// void	cleanup_threads_mutex(t_param *param, \
-// pthread_t *brother)
 {
 	int	i;
 
