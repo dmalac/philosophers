@@ -6,24 +6,29 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 09:46:18 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/02 19:32:52 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/03 12:18:41 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-void	create_mutex(t_data *philo_data, pthread_t *philos, \
+void	create_mutex(t_data *philo_data, pthread_t **philos, \
 t_param *param)
 {
 	int	i;
 
 	i = 0;
+	*philos = malloc(sizeof(pthread_t) * param->total_philos);
+	param->m_forks = malloc(sizeof(pthread_mutex_t) * param->total_philos);
+	param->m_philo = malloc(sizeof(pthread_mutex_t) * param->total_philos);
+	if (!(*philos) || !param->m_forks || !param->m_philo)
+		error_and_exit(MALLOC_ERROR, philo_data, *philos);
 	pthread_mutex_init(&param->m_printer, NULL);
 	while (i < param->total_philos)
 	{
 		if (pthread_mutex_init(&param->m_forks[i], NULL) < 0 || \
 		pthread_mutex_init(&param->m_philo[i], NULL) < 0)
-			error_and_exit(THREAD_ERROR, philo_data, philos);
+			error_and_exit(THREAD_ERROR, philo_data, *philos);
 		i++;
 	}
 }

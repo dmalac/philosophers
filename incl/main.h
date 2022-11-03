@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/31 14:54:21 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/02 19:32:45 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/03 12:19:06 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ t_data			*init_all(t_param *param, t_big_brother *big_brother, \
 long long int	get_timestamp(void);
 void			print_msg(long long int timestamp, size_t philo_id, \
 					int status, t_param *param);
-void			create_mutex(t_data *philo_data, pthread_t *philos, \
+void			create_mutex(t_data *philo_data, pthread_t **philos, \
 					t_param *param);
 void			create_threads(t_data *philo_data, pthread_t *philos, \
 					t_param *param, t_big_brother *surveillance);

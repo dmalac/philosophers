@@ -82,15 +82,18 @@ static t_data	*st_init_philo_data(t_param *param)
 	int		i;
 
 	philo_data = malloc(sizeof(t_data) * param->total_philos);
-	if (philo_data)
+	if (!philo_data)
 	{
-		i = 0;
-		while (i < param->total_philos)
-		{
-			(philo_data + i)->id = i;
-			(philo_data + i)->param = param;
-			i++;
-		}
+		free(param->last_meal);
+		free(param->meals_eaten);
+		error_and_exit(MALLOC_ERROR, NULL, NULL);
+	}
+	i = 0;
+	while (i < param->total_philos)
+	{
+		(philo_data + i)->id = i;
+		(philo_data + i)->param = param;
+		i++;
 	}
 	return (philo_data);
 }
@@ -102,8 +105,6 @@ t_data	*init_all(t_param *param, t_big_brother *spy, char **argv)
 	if (st_init_param(param, argv) == EXIT_FAILURE)
 		error_and_exit(MALLOC_ERROR, NULL, NULL);
 	philo_data = st_init_philo_data(param);
-	if (!philo_data)
-		error_and_exit(MALLOC_ERROR, NULL, NULL);
 	spy->param = param;
 	return (philo_data);
 }
