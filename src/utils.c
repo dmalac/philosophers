@@ -1,16 +1,34 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   ft_putnbr_fd.c                                     :+:    :+:            */
+/*   utils.c                                            :+:    :+:            */
 /*                                                     +:+                    */
-/*   By: dmalacov <marvin@codam.nl>                   +#+                     */
+/*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/10/11 13:32:12 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/08/15 12:15:24 by dmalacov      ########   odam.nl         */
+/*   Created: 2022/11/07 11:15:32 by dmalacov      #+#    #+#                 */
+/*   Updated: 2022/11/07 11:17:09 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <unistd.h>
+#include "main.h"
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	len;
+
+	len = 0;
+	while (*(str + len) != '\0')
+		len++;
+	return (len);
+}
+
+void	ft_putendl_fd(const char *s, int fd)
+{
+	if (s != NULL)
+		write(fd, s, ft_strlen(s));
+	write(fd, "\n", 1);
+}
 
 static void	get_last_digit(int n, int fd)
 {	

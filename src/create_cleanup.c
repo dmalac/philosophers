@@ -6,14 +6,13 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 09:46:18 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/03 12:18:41 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/07 11:26:03 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-void	create_mutex(t_data *philo_data, pthread_t **philos, \
-t_param *param)
+void	create_mutex(t_data *philo_data, pthread_t **philos, t_param *param)
 {
 	int	i;
 
@@ -34,13 +33,12 @@ t_param *param)
 }
 
 void	create_threads(t_data *philo_data, pthread_t *philos, \
-t_param *param, t_big_brother *surveillance)
+t_param *param, t_big_brother *spy)
 {
 	int	i;
 
 	i = 0;
-	if (pthread_create(&surveillance->brother, NULL, monitoring, surveillance) \
-	< 0)
+	if (pthread_create(&spy->brother, NULL, monitoring, spy) < 0)
 		error_and_exit(THREAD_ERROR, philo_data, philos);
 	i = 0;
 	while (i < param->total_philos)

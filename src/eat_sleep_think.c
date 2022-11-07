@@ -6,24 +6,28 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 09:08:43 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/02 19:39:31 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/07 11:30:28 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
 
-static void	st_grab_fork(t_data *data, size_t fork1, size_t fork2)
+static size_t	st_grab_fork(t_data *data, size_t fork1, size_t fork2)
 {
 	pthread_mutex_lock(&data->param->m_forks[fork1]);
 	print_msg(get_timestamp() - data->param->start_time, data->id + 1, FORK, \
 	data->param);
 	if (fork2 == fork1)
+	{
 		get_some_sleep(data->param->die_time * 1000, data->param);
+		return (1);
+	}
 	else
 	{	
 		pthread_mutex_lock(&data->param->m_forks[fork2]);
 		print_msg(get_timestamp() - data->param->start_time, data->id + 1, \
 		FORK, data->param);
+		return (2);
 	}
 }
 
@@ -67,9 +71,11 @@ void	*eat_sleep_think(void *input)
 {
 	size_t	fork1;
 	size_t	fork2;
+	size_t	forks_in_hand;
 	t_data	*data;
 
 	data = (t_data *)input;
+	forks_in_hand = 2;
 	pthread_mutex_lock(&data->param->m_philo[data->id]);
 	pthread_mutex_unlock(&data->param->m_philo[data->id]);
 	get_fork_order(data->id, data->param->total_philos, &fork1, &fork2);
@@ -78,13 +84,13 @@ void	*eat_sleep_think(void *input)
 	if (data->param->total_philos % 2 == 1 && data->id == \
 	data->param->total_philos - 1 && data->param->total_philos > 1)
 		get_some_sleep(data->param->eat_time * 1000 * 2 - 10, data->param);
-	while (live_and_kickin(data->param) == TRUE)
+	while (live_and_kickin(data->param) == TRUE && forks_in_hand == 2)
 	{
 		if (live_and_kickin(data->param) == TRUE)
-			st_grab_fork(data, fork1, fork2);
-		if (live_and_kickin(data->param) == TRUE)
+			forks_in_hand = st_grab_fork(data, fork1, fork2);
+		if (live_and_kickin(data->param) == TRUE && forks_in_hand == 2)
 			st_eat(data, fork1, fork2);
-		if (live_and_kickin(data->param) == TRUE)
+		if (live_and_kickin(data->param) == TRUE && forks_in_hand == 2)
 			st_sleep_and_think(data);
 	}
 	return (NULL);

@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 10:02:56 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/03 12:58:33 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/07 11:24:12 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,11 +28,9 @@ int *total_meals)
 				*total_meals += 1;
 		}
 		time = get_timestamp();
-		if (time - spy->param->last_meal[i] >= \
-		spy->param->die_time)
+		if (time - spy->param->last_meal[i] >= spy->param->die_time)
 		{
-			print_msg(time - spy->param->start_time, i + 1, \
-			DIED, spy->param);
+			print_msg(time - spy->param->start_time, i + 1, DIED, spy->param);
 			return (i);
 		}
 		pthread_mutex_unlock(&spy->param->m_philo[i]);
