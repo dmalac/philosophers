@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 09:30:31 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/02 17:07:25 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/07 13:53:03 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	free_all(t_data *philo_data, pthread_t *philos)
 	{
 		free(philo_data->param->m_philo);
 		free(philo_data->param->meals_eaten);
-		free(philo_data->param->last_meal);
+		free(philo_data->param->last_m);
 		free(philo_data->param->m_forks);
 	}
 	free(philo_data);

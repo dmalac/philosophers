@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/31 12:58:04 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/07 11:30:32 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/07 13:53:03 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ static void	unlock_locks(t_param *param)
 	i = 0;
 	while (i < param->total_philos)
 	{		
-		param->last_meal[i] = param->start_time;
+		param->last_m[i] = param->start_time;
 		pthread_mutex_unlock(&param->m_philo[i++]);
 	}
 }

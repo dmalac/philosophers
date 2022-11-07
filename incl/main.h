@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/31 14:54:21 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/07 11:25:40 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/07 17:05:43 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ typedef struct s_param
 	int				sleep_time;
 	int				think_time;
 	int				meals;
-	long long int	*last_meal;
+	long long int	*last_m;
 	int				*meals_eaten;
 	long long int	start_time;
 	pthread_mutex_t	*m_philo;
@@ -36,6 +36,9 @@ typedef struct s_param
 typedef struct s_data
 {
 	int		id;
+	size_t	fork1;
+	size_t	fork2;
+	int		initial_nap;
 	t_param	*param;
 }				t_data;
 
@@ -89,8 +92,6 @@ void			error_and_exit(int error_code, t_data *philo_data, \
 /* get.c */
 long long int	get_timestamp(void);
 void			get_some_sleep(int to_sleep, t_param *param);
-void			get_fork_order(int id, int total_philos, size_t *fork1, \
-					size_t *fork2);
 /* monitoring.c */
 void			*monitoring(void *philos);
 /* print_msg.c */

@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 14:40:13 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/02 19:15:05 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/07 17:01:34 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,9 +31,11 @@ void	get_some_sleep(int to_sleep, t_param *param)
 	int				moment;
 	long long int	before;
 	long long int	after;
+	int				x;
 
-	moment = 100;
-	while (to_sleep >= moment && live_and_kickin(param) == TRUE)
+	moment = 400;
+	x = 1;
+	while (to_sleep >= moment)
 	{
 		before = get_timestamp();
 		usleep(moment);
@@ -42,14 +44,9 @@ void	get_some_sleep(int to_sleep, t_param *param)
 			to_sleep -= (after - before) * 1000;
 		else
 			break ;
+		if (x % 1500 == 0)
+			if (live_and_kickin(param) != TRUE)
+				break ;
+		x++;
 	}
-}
-
-void	get_fork_order(int id, int total_philos, size_t *fork1, size_t *fork2)
-{
-	if (id > 0)
-		*fork1 = id - 1;
-	else if (id == 0)
-		*fork1 = total_philos - 1;
-	*fork2 = id;
 }

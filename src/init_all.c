@@ -62,12 +62,12 @@ static void	st_process_input(t_param *param, char **argv)
 static int	st_init_param(t_param *param, char **argv)
 {
 	st_process_input(param, argv);
-	param->last_meal = malloc(sizeof(long long int) * param->total_philos);
-	if (param->last_meal)
+	param->last_m = malloc(sizeof(long long int) * param->total_philos);
+	if (param->last_m)
 		param->meals_eaten = malloc(sizeof(int) * param->total_philos);
-	if (!param->last_meal || !param->meals_eaten)
-		return (free(param->last_meal), EXIT_FAILURE);
-	param->last_meal = memset(param->last_meal, 0, sizeof(long long int) * \
+	if (!param->last_m || !param->meals_eaten)
+		return (free(param->last_m), EXIT_FAILURE);
+	param->last_m = memset(param->last_m, 0, sizeof(long long int) * \
 	param->total_philos);
 	param->meals_eaten = memset(param->meals_eaten, 0, sizeof(int) * \
 	param->total_philos);
@@ -76,23 +76,25 @@ static int	st_init_param(t_param *param, char **argv)
 	return (EXIT_SUCCESS);
 }
 
-static t_data	*st_init_philo_data(t_param *param)
+static t_data	*st_init_philo_data(t_data *philo_data, t_param *param)
 {
-	t_data	*philo_data;
 	int		i;
 
-	philo_data = malloc(sizeof(t_data) * param->total_philos);
-	if (!philo_data)
-	{
-		free(param->last_meal);
-		free(param->meals_eaten);
-		error_and_exit(MALLOC_ERROR, NULL, NULL);
-	}
 	i = 0;
 	while (i < param->total_philos)
 	{
 		(philo_data + i)->id = i;
 		(philo_data + i)->param = param;
+		if (i > 0)
+			(philo_data + i)->fork1 = i - 1;
+		else if (i == 0)
+			(philo_data + i)->fork1 = param->total_philos - 1;
+		(philo_data + i)->fork2 = i;
+		(philo_data + i)->initial_nap = 0;
+		if (i % 2 == 1)
+			(philo_data + i)->initial_nap = param->eat_time * 1000 - 200;
+		else if (i == param->total_philos - 1 && i > 1 && i % 2 == 1)
+			(philo_data + i)->initial_nap = param->eat_time * 1000 * 2 - 200;
 		i++;
 	}
 	return (philo_data);
@@ -104,7 +106,14 @@ t_data	*init_all(t_param *param, t_big_brother *spy, char **argv)
 
 	if (st_init_param(param, argv) == EXIT_FAILURE)
 		error_and_exit(MALLOC_ERROR, NULL, NULL);
-	philo_data = st_init_philo_data(param);
+	philo_data = malloc(sizeof(t_data) * param->total_philos);
+	if (!philo_data)
+	{
+		free(param->last_m);
+		free(param->meals_eaten);
+		error_and_exit(MALLOC_ERROR, NULL, NULL);
+	}
+	philo_data = st_init_philo_data(philo_data, param);
 	spy->param = param;
 	return (philo_data);
 }
