@@ -6,11 +6,12 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/31 12:58:04 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/07 13:53:03 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/08 12:41:22 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
+#include <unistd.h>
 
 static void	lock_locks(t_param *param)
 {
@@ -50,6 +51,7 @@ int	main(int argc, char **argv)
 	create_mutex(philo_data, &philos, &param);
 	lock_locks(&param);
 	create_threads(philo_data, philos, &param, &spy);
+	usleep(2000);
 	unlock_locks(&param);
 	cleanup_threads_mutex(philos, &param, &spy.brother);
 	free_all(philo_data, philos);

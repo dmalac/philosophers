@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/31 14:54:21 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/07 17:05:43 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/08 12:19:32 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ void			error_and_exit(int error_code, t_data *philo_data, \
 /* get.c */
 long long int	get_timestamp(void);
 void			get_some_sleep(int to_sleep, t_param *param);
+int				get_initial_nap_time(int total_philos, int id, int eat_time);
 /* monitoring.c */
 void			*monitoring(void *philos);
 /* print_msg.c */

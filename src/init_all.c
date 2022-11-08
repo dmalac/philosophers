@@ -78,24 +78,21 @@ static int	st_init_param(t_param *param, char **argv)
 
 static t_data	*st_init_philo_data(t_data *philo_data, t_param *param)
 {
-	int		i;
+	int		id;
 
-	i = 0;
-	while (i < param->total_philos)
+	id = 0;
+	while (id < param->total_philos)
 	{
-		(philo_data + i)->id = i;
-		(philo_data + i)->param = param;
-		if (i > 0)
-			(philo_data + i)->fork1 = i - 1;
-		else if (i == 0)
-			(philo_data + i)->fork1 = param->total_philos - 1;
-		(philo_data + i)->fork2 = i;
-		(philo_data + i)->initial_nap = 0;
-		if (i % 2 == 1)
-			(philo_data + i)->initial_nap = param->eat_time * 1000 - 200;
-		else if (i == param->total_philos - 1 && i > 1 && i % 2 == 1)
-			(philo_data + i)->initial_nap = param->eat_time * 1000 * 2 - 200;
-		i++;
+		(philo_data + id)->id = id;
+		(philo_data + id)->param = param;
+		if (id > 0)
+			(philo_data + id)->fork1 = id - 1;
+		else if (id == 0)
+			(philo_data + id)->fork1 = param->total_philos - 1;
+		(philo_data + id)->fork2 = id;
+		(philo_data + id)->initial_nap = \
+		get_initial_nap_time(param->total_philos, id, param->eat_time);
+		id++;
 	}
 	return (philo_data);
 }

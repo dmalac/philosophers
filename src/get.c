@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 14:40:13 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/07 17:01:34 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/08 12:51:44 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,4 +49,17 @@ void	get_some_sleep(int to_sleep, t_param *param)
 				break ;
 		x++;
 	}
+}
+
+int	get_initial_nap_time(int total_philos, int id, int eat_time)
+{
+	if (total_philos % 2 == 0 && id % 2 == 1)
+		return (eat_time * 1000 - 200);
+	else if (total_philos % 2 == 1 && (id % 3 == 1 || \
+	(id == total_philos - 1 && id % 3 == 0)))
+		return (eat_time * 1000 - 200);
+	else if (total_philos % 2 == 1 && id % 3 == 2)
+		return (eat_time * 1000 * 2 - 200);
+	else
+		return (0);
 }
