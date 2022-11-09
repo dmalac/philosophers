@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 09:08:43 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/07 17:04:47 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/09 17:59:51 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,11 +50,11 @@ static void	st_sleep_and_think(t_data *data)
 {
 	print_msg(get_timestamp() - data->param->start_time, data->id + 1, \
 	SLEEPING, data->param);
-	get_some_sleep(data->param->sleep_time * 1000 - 1000, data->param);
+	get_some_sleep(data->param->sleep_time * 1000, data->param);
 	print_msg(get_timestamp() - data->param->start_time, data->id + 1, \
 	THINKING, data->param);
 	if (data->param->total_philos % 2 == 1)
-		get_some_sleep(data->param->think_time * 1000 - 1000, data->param);
+		get_some_sleep(data->param->think_time * 1000, data->param);
 }
 
 int	live_and_kickin(t_param *param)
