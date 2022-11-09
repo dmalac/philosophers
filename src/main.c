@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/31 12:58:04 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/08 12:41:22 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/09 11:07:31 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,11 +46,14 @@ int	main(int argc, char **argv)
 	t_big_brother	spy;
 
 	if (argc < 5 || argc > 6)
-		error_and_exit(ARGS_ERROR, NULL, NULL);
-	philo_data = init_all(&param, &spy, argv);
-	create_mutex(philo_data, &philos, &param);
+		return (error_and_free(ARGS_ERROR, NULL, NULL));
+	if (init_all(&param, &philo_data, &spy, argv) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
+	if (create_mutex(philo_data, &philos, &param) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	lock_locks(&param);
-	create_threads(philo_data, philos, &param, &spy);
+	if (create_threads(philo_data, philos, &param, &spy) == EXIT_FAILURE)
+		return (EXIT_FAILURE);
 	usleep(2000);
 	unlock_locks(&param);
 	cleanup_threads_mutex(philos, &param, &spy.brother);

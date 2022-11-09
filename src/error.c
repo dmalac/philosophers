@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/25 09:30:31 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/07 13:53:03 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/09 11:14:25 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ void	free_all(t_data *philo_data, pthread_t *philos)
 	free(philos);
 }
 
-void	error_and_exit(int error_code, t_data *philo_data, pthread_t *philos)
+int	error_and_free(int error_code, t_data *philo_data, pthread_t *philos)
 {
 	const char	error_message[5][47] = \
 	{"Please provide between 5 and 6 arguments", \
@@ -37,6 +37,7 @@ void	error_and_exit(int error_code, t_data *philo_data, pthread_t *philos)
 	"Error allocating memory", "Error creating a thread or a mutex"};
 
 	ft_putendl_fd(error_message[error_code], STDERR_FILENO);
-	free_all(philo_data, philos);
-	exit(EXIT_FAILURE);
+	if (philo_data || philos)
+		free_all(philo_data, philos);
+	return (EXIT_FAILURE);
 }
