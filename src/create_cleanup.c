@@ -6,11 +6,24 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/10/26 09:46:18 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/09 11:10:35 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/14 16:02:18 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "main.h"
+
+static void	st_destroy_mutex(t_param *param, int i_f, int i_p)
+{
+	pthread_mutex_destroy(&param->m_printer);
+	if (i_f > i_p)
+		pthread_mutex_destroy(&param->m_forks[i_f]);
+	while (i_p >= 0)
+	{
+		pthread_mutex_destroy(&param->m_forks[i_p]);
+		pthread_mutex_destroy(&param->m_philo[i_p]);
+		i_p--;
+	}
+}
 
 int	create_mutex(t_data *philo_data, pthread_t **philos, t_param *param)
 {
@@ -25,9 +38,16 @@ int	create_mutex(t_data *philo_data, pthread_t **philos, t_param *param)
 	pthread_mutex_init(&param->m_printer, NULL);
 	while (i < param->total_philos)
 	{
-		if (pthread_mutex_init(&param->m_forks[i], NULL) < 0 || \
-		pthread_mutex_init(&param->m_philo[i], NULL) < 0)
+		if (pthread_mutex_init(&param->m_forks[i], NULL) < 0)
+		{
+			st_destroy_mutex(param, i - 1, i - 1);
 			return (error_and_free(THREAD_ERROR, philo_data, *philos));
+		}
+		if (pthread_mutex_init(&param->m_philo[i], NULL) < 0)
+		{
+			st_destroy_mutex(param, i, i - 1);
+			return (error_and_free(THREAD_ERROR, philo_data, *philos));
+		}
 		i++;
 	}
 	return (EXIT_SUCCESS);
@@ -46,7 +66,12 @@ t_param *param, t_big_brother *spy)
 	{
 		if (pthread_create(&philos[i], NULL, eat_sleep_think, \
 		&philo_data[i]) < 0)
+		{
+			pthread_join(spy->brother, NULL);
+			while (i-- >= 0)
+				pthread_join(philos[i], NULL);
 			return (error_and_free(THREAD_ERROR, philo_data, philos));
+		}
 		i++;
 	}
 	return (EXIT_SUCCESS);

@@ -6,7 +6,7 @@
 /*   By: dmalacov <dmalacov@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/08/31 12:58:04 by dmalacov      #+#    #+#                 */
-/*   Updated: 2022/11/09 11:07:31 by dmalacov      ########   odam.nl         */
+/*   Updated: 2022/11/14 16:33:08 by dmalacov      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,10 @@ int	main(int argc, char **argv)
 		return (EXIT_FAILURE);
 	lock_locks(&param);
 	if (create_threads(philo_data, philos, &param, &spy) == EXIT_FAILURE)
+	{
+		unlock_locks(&param);
 		return (EXIT_FAILURE);
+	}
 	usleep(2000);
 	unlock_locks(&param);
 	cleanup_threads_mutex(philos, &param, &spy.brother);
